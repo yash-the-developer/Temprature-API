@@ -3,6 +3,7 @@ import json
 import bs4
 import requests
 from flask import Flask
+from youtubesearchpython import VideosSearch
 
 app = Flask(__name__)
 
@@ -20,11 +21,7 @@ def temperature(place):
     postRequest = requests.get(TARGET_URL + place)
     result = findByClass(postRequest.text, TEMPERATURE_TAG)
 
-    return app.response_class(
-        response=json.dumps(result),
-        status=200,
-        mimetype='application/json'
-    )
+    return result
 
 
 def findByClass(text, className):
