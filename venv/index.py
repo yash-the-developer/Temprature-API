@@ -1,31 +1,38 @@
-from flask import Flask
+import json
 
+import bs4
+import requests
+from flask import Flask
+from youtubesearchpython import VideosSearch
 
 app = Flask(__name__)
 
+TEMPERATURE_TAG = 'BNeawe iBp4i AP7Wnd'
+TARGET_URL = "https://www.google.com/search?q=temprature+at+"
+
 
 @app.route('/')
-def home():
-    return 'Home Page Route - nice work Andrew!!!'
+def main():
+    return 'API is working!'
 
 
-@app.route('/about')
-def about():
-    return 'About Page Route'
+@app.route("/temperature/<place>")
+def temperature(place):
+    postRequest = requests.get(TARGET_URL + place)
+    result = findByClass(postRequest.text, TEMPERATURE_TAG)
+
+    return app.response_class(
+        response=json.dumps(result),
+        status=200,
+        mimetype='application/json'
+    )
 
 
-@app.route('/portfolio')
-def portfolio():
-    return 'Portfolio Page Route'
+def findByClass(text, className):
+    soup = bs4.BeautifulSoup(text, 'lxml')
+    result = soup.find_all("div", {"class": className})
 
-
-@app.route('/contact')
-def contact():
-    return 'Contact Page Route'
-
-
-@app.route('/api')
-def api():
-    with open('data.json', mode='r') as my_file:
-        text = my_file.read()
-        return text
+    try:
+        return result[0].getText()
+    except Exception:
+        return "no result found"
