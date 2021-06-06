@@ -1,9 +1,6 @@
-import json
-
 import bs4
 import requests
 from flask import Flask
-from youtubesearchpython import VideosSearch
 
 app = Flask(__name__)
 
