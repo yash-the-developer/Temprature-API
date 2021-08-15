@@ -17,8 +17,7 @@ def main():
 def temperature(place):
     postRequest = requests.get(TARGET_URL + place)
     result = findByClass(postRequest.text, TEMPERATURE_TAG)
-    celcius=(int(result.replace("°F", " "))-32)*5/9)
-    return celcius
+    return result
 
 def findByClass(text, className):
     soup = bs4.BeautifulSoup(text, 'lxml')
